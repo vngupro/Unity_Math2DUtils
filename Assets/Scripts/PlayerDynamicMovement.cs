@@ -26,7 +26,6 @@ public class PlayerDynamicMovement : MonoBehaviour
             Vector3 newPosition = transform.position + vitesse * Time.deltaTime;
             vitesse += acceleration * Time.fixedDeltaTime;
             transform.position = newPosition;
-            acceleration 
             
         }
 
