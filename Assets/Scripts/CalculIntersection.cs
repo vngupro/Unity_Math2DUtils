@@ -5,13 +5,14 @@ using UnityEngine;
 public class CalculIntersection : MonoBehaviour
 {
     public SuperShip player;
-    public EnemyShip ship;
     public Bullet bulletPrefab;
     public EnemyShip shipPrefab;
     public float tolerance = 1.0f;
-
+    public float delayBeforeNewShip = 1.0f;
+    private Bullet bullet;
+    private EnemyShip ship;
     private bool hasBullet = false;
-    private bool hasShip = true;
+    private bool hasShip = false;
     private void Awake()
     {
         //bullet.cs
@@ -19,6 +20,12 @@ public class CalculIntersection : MonoBehaviour
         //enemyship.cs
         GameEvents.createShip.AddListener(CreateShip);
     }
+
+    private void Start()
+    {
+        CreateShip();
+    }
+
     private void FixedUpdate()
     {
         if (hasShip)
@@ -46,15 +53,9 @@ public class CalculIntersection : MonoBehaviour
 
                 if (!hasBullet)
                 {
-                    Bullet bullet = Instantiate(bulletPrefab, playerPos, player.transform.rotation);
+                    bullet = Instantiate(bulletPrefab, playerPos, player.transform.rotation);
                     bullet.speed = speedBullet;
                     bullet.interPos = interPos;
-
-                    if (Mathf.Abs(tBullet - tEnemy) < tolerance)
-                    {
-                        Debug.Log("hit !");
-                    }
-
                     hasBullet = true;
                 }
 
@@ -71,7 +72,16 @@ public class CalculIntersection : MonoBehaviour
 
     public void CreateShip()
     {
+        hasShip = false;
+   
+        StartCoroutine(NewShip());
+    }
+
+    IEnumerator NewShip()
+    {
+        yield return new WaitForSeconds(delayBeforeNewShip);
         ship = Instantiate(shipPrefab, transform.position, transform.rotation);
+        yield return new WaitForSeconds(delayBeforeNewShip);
         hasShip = true;
     }
 }

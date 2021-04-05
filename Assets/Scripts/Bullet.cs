@@ -6,7 +6,7 @@ public class Bullet : MonoBehaviour
 {
     public float speed;
     public Vector3 interPos;
-    public float tolerance = 1f;
+    public float tolerance;
 
     void FixedUpdate()
     {
@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviour
         Vector3 dir = vBulletToTarget.normalized;
         Vector3 newPos = pos + dir * speed * Time.fixedDeltaTime;
         transform.position = newPos;
-
+        tolerance = speed * 0.1f;
         float mBulletToTarget = vBulletToTarget.magnitude;
         if(Mathf.Abs(mBulletToTarget) <= tolerance)
         {
@@ -44,6 +44,7 @@ public class Bullet : MonoBehaviour
         //calculIntersection.cs
         //enemyShip.cs
         GameEvents.onHit.Invoke();
+        Debug.Log("Bullet destroy");
         Destroy(this.gameObject);
     }
 }

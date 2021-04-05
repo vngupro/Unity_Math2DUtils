@@ -5,14 +5,13 @@ using UnityEngine;
 public class EnemyShip : MonoBehaviour
 {
     /*
-     * and clamp speed
+     * Clamp speed
      * speed.MagnetizedClamp(minSpeed, maxSpeed);
      * 
-     * ok how do you decelerate in a natural way.
+     * decelerate in a natural way.
      * speed -= a *Time.fixedDeltatime
      * 
-     * One problem -> it's easier to have constant speed 
-     * so start with constant speed and when with acceleration and deceleration (like he wants to dodge)
+     * so start with constant speed and then with acceleration and deceleration (like he wants to dodge)
      * 
      */
 
@@ -34,8 +33,10 @@ public class EnemyShip : MonoBehaviour
 
     public Vector3 interPos;
     private bool isGettingNewLocation = false;
+
     private void Start()
     {
+        //get first movement location
         Camera cam = Camera.main;
         Vector3 camPos = cam.transform.position;
         float camHeight = 2f * cam.orthographicSize;
@@ -56,6 +57,7 @@ public class EnemyShip : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        //Advance Ship
         Vector3 shipPos = transform.position;
         Vector3 vShipToTarget = target - shipPos;
         Vector3 dirShipToTarget = vShipToTarget.normalized;
@@ -81,8 +83,7 @@ public class EnemyShip : MonoBehaviour
         {
             StartCoroutine(GetNewPosition());
         }
-
-        Debug.DrawLine(transform.position, target, Color.green, Time.fixedDeltaTime);        
+        
         Debug.DrawLine(transform.position, target, Color.red, Time.fixedDeltaTime);
     }
 
@@ -107,13 +108,13 @@ public class EnemyShip : MonoBehaviour
         Vector3 pos = transform.position;
         if (Mathf.Abs((pos - interPos).magnitude) <= 0.1f) 
         {
-            GameEvents.createShip.Invoke();
             DestroyShip();
         }
     }
 
     public void DestroyShip()
     {
+        GameEvents.createShip.Invoke();
         Destroy(this.gameObject);
     }
 }
